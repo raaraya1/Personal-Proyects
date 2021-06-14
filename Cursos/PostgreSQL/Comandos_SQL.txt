@@ -1,0 +1,844 @@
+# ---------------------------------Enlaces de referencia----------------------------------------
+LOS SIGUIENTES COMANDOS FUERON EXTRAIDOS DE LA SIGUIENTE LISTA DE VIDEOS:
+https://www.youtube.com/watch?v=jxIEDKzGrOs&list=PL8gxzfBmzgex2nuVanqvxoTXTPovVSwi2
+
+
+# ---------------Crear una base de datos------------------------------------
+
+create database nombre_base_de_datos
+
+# ----------------------Para eliminar una base de datos-------------------------
+## Antes de borrar la base de datos hay que desconectarla 
+### click derecho en la base de datos y buscar la opcion para desconectar
+
+drop database if exist "nombre_base_de_datos" 
+
+# ---------------------Para crear una tabla-------------------------------------
+## Para luego acceder a la tabla, hay que meterse a los esquemas y en estos buscar en la opcion de tablas.
+
+create table persona(
+	IDpersona int,
+	nombre varchar(20),
+	cedula varchar(10)
+	)
+
+# -----------------------Para insertar datos en las tablas----------------------------
+## apretando Ctrl + Space se rellena automatico para la seleccion de campos
+### Para corroborar que se hayan insertados los datos, podemos desde el mismo editor de consultas ejecutar el comando (select * from persona)
+
+-- Para colocar 1 dato con todos sus atributos
+insert into persona values ('0', 'Maria', '123432332')
+
+-- Para insertar un dato, seleccionando los campos a rellenar
+insert into persona (idpersona, nombre)values ('1', 'Marcos')
+
+# ------------------------Para acutalizar registros (cambiar un dato)-----------------------------------
+
+update persona set nombre = 'Diego', cedula = '1231414241'
+where idpersona = '1'
+
+# ------------------------Tipos de datos----------------------------------------------------------------
+
+-- bolean = true or false 
+-- character() = cadena de texto de tamaño fijo
+-- date = fecha
+-- Float = flotante
+-- Int, interger = numero entero
+-- decimal = numero exacto
+-- time = tiempo en horas, minutos, segundos, etc.
+-- varchar() = cadena de caracteres de tamaño variable
+
+# -------------------------Consultas----------------------------------------------------------------------
+# Mostrar información
+
+-- nos devuelve todo lo que contiene la tabla
+select * from persona  
+
+--datos separados
+select (nombre, cedula) from persona 
+
+--datos juntos (con alias)
+select (nombre, cedula) as datos from persona 
+
+--datos juntos mostrados por separados (con alias)
+select nombre as Nombre, cedula from persona 
+
+--mostrar un dato segun una condicion
+select nombre from persona where idpersona = '1'
+
+# where y condicionales
+
+-- igual
+select * from persona
+where nombre = 'eduardo'
+
+-- diferente
+select * from persona
+where nombre != 'eduardo'
+
+-- mayor, menor (>, <. >=, <=)
+select * from persona
+where idpersona > 0
+
+-- por mas de una condicion (operadores logicos and y or)
+select * from persona
+where idpersona = 2 and nombre = 'jose'
+
+# ---------------------------Para borrar un registro--------------------------------------
+## si no se utiliza el where para especificar las filas, se terminarán borrando todas la filas de la tabla
+### Nota: para comentar un grupo de lineas de codigo, utilizar ( /* bla bla bla */ )
+
+delete from persona
+where nombre = 'Daniel'
+
+# --------------------------Para modificar una tabla---------------------------------------
+
+## agregar una columna
+### Si despues se quiere agregar la condicion de que esta columna no acpte valores nulos, primero se debe hacer la columna, despues llenarla con datos y despues ponerle la condicion.
+
+Alter table persona
+ADD Column Test varchar(20) 
+
+## cambiar de nombre a una columna
+
+alter table persona
+rename column test to test2
+
+## para borrar una columna
+
+alter table persona
+drop column test2
+
+# modicicaciones en la columna misma
+
+## crear una columan que no acepte nulos
+
+alter table persona
+add column test varchar(20)
+
+### para rellenar los campos nulos
+select * from persona
+update persona set test = 'TYM'
+
+alter table persona
+alter column test set not null
+
+## para que una columna acepte valores nulos
+
+alter table persona
+alter column test drop not null
+
+## para cambiar el tipo de dato que acepta la columna
+
+alter table persona
+alter column test type varchar(50)
+
+# ------------------------clave primeria-------------------------------
+
+## cuando creamos una tabla
+create table persona(
+    idpersona int not null, 
+    nombre varchar(20), 
+    cedula varchar(10),
+    primary key (idpersona)
+    )
+
+## cuando ya tenemos la tabla creada
+alter table persona
+add primary key (idpersona)
+
+
+# ---------------------usar tipo serial-----------------------------------
+## esto es para que el campo de id se vaya incrementando solo
+
+create table test(
+    idtest serial primary key not null, 
+    nombre varchar(20), 
+    telefono varchar(10)
+    )
+
+select * from test
+
+insert into test (nombre, telefono) values ('Eduardo', '3252541354')
+insert into test (nombre, telefono) values ('Eduardo', '3252541354')
+insert into test (nombre, telefono) values ('Eduardo', '3252541354')
+
+
+# ------------------------------drop y truncate------------------------------
+## es para re hacer la tabla
+
+select * from test
+
+## borrar todos los campos de la tabla
+delete from test
+
+## para eliminar la tabla, para que el serial vuelva de 0
+drop table test
+
+## reiniciar el id de autoincrementar
+truncate table test restart identity
+
+# -------------------------agregar valore por defecto---------------------
+
+drop table test
+
+create table test(
+    idtest serial primary key not null, 
+    nombre varchar(20), 
+    telefono varchar(20) default 'desconocido'
+    )
+
+insert into test (nombre, telefono) values ('eduardo', '42541543')
+insert into test (nombre) values ('luis')
+
+# ----------------------------columnas calculadas-----------------------------
+## crear una columna temporal para luego modificar una columna
+
+select * from planilla
+select nombre, salario, (salario + 1500) as bono
+from planilla
+
+update planilla set salario = salario + 1500
+where nombre = 'eduardo'
+
+# ---------------------ordenar la consulta---------------------------------------
+## asc de ascendente y desc de descendiente
+## para texto ordena alfabeticamente
+
+select * from persona order by nombre asc 
+
+## ordenar por columna
+select * from persona order by nombre, idpersona
+
+
+# --------------buscar dentro de una tabla-----------------------------------
+
+# busca cualquier palabra que contenga la letra 'e'
+## ojo que distingue entre mayusculas y minusculas
+select * from persona
+where nombre like '%e%'
+
+# cuando se que la penultima letra es 'd'
+select * from persona
+where nombre like '%d_'
+
+# -----------------para contar los registros de una tabla---------------------
+
+## primera forma
+select count(*) from persona 
+
+## segunda forma (para una columna en especifico)
+select count(nombre) from persona
+
+## tercera forma (con una condicion incluida)
+select count(nombre) from persona
+where nombre like '%E%'
+
+# ------------------------------Para hacer sumar de resistros----------------------
+
+## sin condicionar
+select sum(salarios) from planilla
+
+## con algunna condicion
+select sum(salarios) from planilla
+where nombre like '%a%'
+
+
+# ---------------------max(), min() y agrupacion--------------------------
+
+## buscar el minimo en la columna salario
+select min(salario) from planilla
+
+## buscar el maximo en la columna salario
+select max(salario) from planilla
+
+## se agrupan los nombres repetidos y se queda con el mayor de sus valores
+select nombre, max(salario) from planilla
+group by nombre
+
+# ------------Para obtener el promedio de los datos----------------------
+
+## sin condiciones
+select avg(salario) from planilla
+
+## con la condicion de no repetir los nombres
+select nombre, avg(salario) from planilla
+group by nombre
+
+
+# --------------------Condicional sobre el grupo ------------------------------
+
+## having solo se puede usar si antes se utiliza group by, es muy parecido al where, pero el where trabaja con toda la tabla.
+
+select nombre, salario from planilla
+where nombre = 'Jose'
+group by nombre, salario
+having salario > 3000
+
+# ------------------buscar resultados diferentes sobre una columna o tabla---------------
+
+## muestra los valores unicos de la columna
+select distinct nombre from planilla
+
+## contar los registros uicos en la columna
+select count(distinct nombre) from planilla
+
+# --------------------Para mostrar valores segun un rango-------------------
+
+## mostrar los valores que tengan un salario entre 2000 y 5000
+select * from planilla
+where salario between 2000 and 5000
+
+## mostrar los valores NO que tengan un salario entre 2000 y 5000
+select * from planilla
+where salario not between 2000 and 5000
+
+# --------------------restriccion de unicidad en una columna (aparte del primary key)------------
+
+## restringe que en la columna salario existan solo valores unicos
+alter table planilla
+add constraint UQ_salario
+unique(salario)
+
+# ----------------------Como eleminar una restriccion------------------------------
+
+alter table planilla
+drop constraint uq_salario
+
+
+# -----------------------Relacionar dos tablas--------------------------------------
+## ojo que aplicando esto, luego si intentamos agregar una nueva fila en 'planilla' con un id de empresa que no esta registrado en la tabla de 'empresa' esto nos arrojará un error.
+
+
+select * from planilla
+select * from empresas
+
+## agregar la columna para generar la relacion
+alter table planilla
+add CodigoEmpresa interger
+
+## modificar los valores existentes para acptar la nueva columna
+update planilla set CodigoEmpresa = '2'
+
+alter table planilla 
+add constraint FKtest
+foreign key(CodigoEmpresa)
+references empresas (codigo)
+
+
+# -----------------------------------funciones o procedimientos almacenados-----------------------------
+
+## funcion que retorna la suma de los valores
+create or replace function suma (num1 int, num2 int) returns interger
+as 
+$$
+
+select num1 + num2;
+
+$$
+language SQL
+
+## por ejemplo
+select suma('50', '150')
+
+
+create function BuscarSalario(varchar) returns interger
+as
+$$
+
+select salario from planilla
+where nombre = $1   # esto utiliza el primer parametro que la funcion
+
+$$
+language SQL
+
+## probemos un ejemplo
+select BuscarSalario('eduardo')
+
+
+## funcion para crear personas
+### void se utiliza para que no retorne nada
+
+create function InsertarPersonas () returns void
+as
+$$
+
+insert into planilla values ('david', '4', '6500');
+insert into planilla values ('luis', '5', '7000');
+insert into planilla values ('german', '6', '2000');
+insert into planilla values ('olga', '7', '1500');
+
+
+$$
+language SQL
+
+
+## ahora llamamos a la funcion
+select InsertarPersonas()
+
+## funcion para buscar informacion
+create function buscarinfo (int) returns planilla
+as
+$$
+
+select * from planilla
+where nid = $1;
+
+$$
+language SQL
+
+
+## ahora llamemos a la funcion
+select buscarinfo(1)
+
+# ----------------------------para ver una cantidad determinada de datos-----------------------------
+
+select * from planilla
+limit 5
+
+# -----------------------------------triggers o disparadores-----------------------------------------
+## son acciones que se ejecutan cuando manejamos la base de datos
+
+## para guardar la informacion que se cambio
+select * from "log_triggers"
+
+create function SP_test() returns trigger
+as
+$$
+begin
+
+insert into 'log_triggers' values (old.nombre, old.nid, old.salario);    # old.nombre toma el nombre del dato que se esta cambiando   
+
+return new;
+end
+$$
+language plpgsql;
+
+create trigger TR_Update before update on planilla 
+for each row
+execute procedure SP_test();
+
+## ahora probemoslo
+update planilla set
+nombre = 'Eduardo',
+nid = '11',
+salario = '6000'
+where nombre = 'eduardo'
+
+## veamos los cambios
+select * from 'log_triggers'
+
+
+create function SP_TR_Insert() retunrs trigger
+as
+$$
+-- variables
+declare
+
+usuario varchar(250) := user;
+fecha date := current_date;
+tiempo time := current_time;
+
+begin
+
+insert into 'log_triggers' values (new.nombre, new.nid, new.salario, usuario, fecha, tiempo);
+
+return new;
+end
+$$
+language plpgsql;
+
+## ejecutemos el trigger
+create trigger TR_Insert after insert on planilla
+for each row
+execute procedure SP_TR_insert();
+
+## ahora probemoslo
+insert into planilla values ('greg', '12', '8500')
+
+## veamos que se guardo
+select * from "log_triggers";
+
+# -------------------------------------------operador in-----------------------------------------
+
+## ejemplo de lo que se quiere hacer
+select * from planilla
+where nid = '2' or nid = '11' or nid ='3'
+
+## esto es equivalente a 
+select * from planilla
+where nid in ('2', '11', '3')
+
+# -------------------------------------------clausula limit y offset----------------------------------
+## limit para limitar la cantidad de registros que se mostraran
+## el offset es para marcar la fila de inicio (offset las filas que no se van a mostrar al inicio)
+
+selecct * from planilla limit 3 offset 4
+
+# ---------------------------------------------vista-----------------------------------------------
+## se crea una tabla para mostrar informacion de otras tablas en forma resumida
+## si se genera un cambio en las tablas originales, las vistas tambien se actualizaran
+
+select * from planilla
+
+create view view_data_from_persona 
+as select nombre, nid from planilla;
+
+select * from view_data_from_persona
+
+
+# ----------------------------operador union (para poder unir dos consultas)------------------------------
+## la union entre las consultas se debe hacer con columnas con el mismo tipo de datos
+## union all es para que no elimine datos duplicados
+
+select * from planilla;
+select * from persona;
+
+create view view_union
+as
+select nombre, nid 'planilla' as Origen from planilla
+union all 
+select nombre, idpresona, 'presona' from persona
+order by origen
+
+select * view_union
+
+
+# ------------------------------clausula inner join-------------------------------------------------------------
+## primero hay que buscar un campo en comun entre dos tablas
+## unir dos tablas por un campo que contenga la misma informacion
+
+select * from planilla
+select * from persona
+
+select * from planilla as a1
+inner join persona b1
+on a1.nid = b1.idpersona
+
+# -----------------------------------------clasula left join--------------------------------------------------------
+## la primera tabla que se pone corresponde a la izquierda
+## muestra todo el contenido de la tabla izquierda aunque no tenga relacion con la de la derecha
+## los datos que no tengan relacion los colocara como valores nulos
+
+select * from planilla
+select * from persona
+
+select * from planilla as a1
+left join persona b1
+on a1.nid = b1.odpersona
+
+# -------------------------------------------clausula right join---------------------------------------------------
+## basicamente lo mismo que lo anterior, pero ahora se conservaran los datos de la segunda tabla
+
+select * from planilla as a1
+right join persona b1
+on a1.nid = b1.odpersona
+
+# ---------------------------------------------clausula full join--------------------------------------------
+## va a mostrar todo, tanto el contenio de la primera tabla como el de la segunda
+
+select * from planilla as a1
+full join persona b1
+on a1.nid = b1.odpersona
+
+# -------------------------------------clausula cross join----------------------------------------------------------
+## muestra todas las combinacione posibles entre la dos tablas
+## no necesita la condicion del campo en comun
+## para este caso no tiene mucho sentido, pero si fueran tablas por ejemplo platos de fondo y postres, esta nos serviria para generar el menu, probando todas las combinaciones posibles.
+
+select * from planilla as a1
+cross join persona b1
+
+# -------------------------------------------------with check option----------------------------------------------------
+## esta sentencia solo trabaja sobre las vistas
+
+create view view_personas as
+select * from persona
+where pais = 'costa rica'
+
+select * from view_personas
+
+## si queremos poner informacion de otro pais en la vista, tambien se van a colocar en la tabla original
+insert into view_personas values('2141', 'manuel', 'vargas', 'colombia', '12')
+
+
+## para corregir esto debemos hacer lo siguiente
+create view view_personas as
+select * from persona
+where pais = 'costa rica'
+with check option
+
+## de esta forma solo se agregaran los datos que corresponde al pais de 'costa rica'
+
+
+# ----------------------------------------funciones matematicas--------------------------------------------
+## abs(x) | cbrt(x) | ceiling(x) | floor(x)
+
+## abs() : valor absoluto
+## cbrt() : retorna la raiz cubica
+## ceiling() : redondear el numero al siguinte
+## floor() : redondear hacia abajo
+
+select abs(-30)
+select cbrt(27)
+select ceiling(15.33)
+select floor(16.58)
+
+## power(x, y) | round(n, d) | sign(x) | sqrt(x)
+## power(x, y) : potencia (x elevado y)
+## round(n, d) : redondear el nummero n en el decimal d
+## sign(x) : si el argumento es positivo retorna 1, si es negativo retorna -1 y si es cero retorna 0
+## sqrt(x) : devuelve la raiz cuadrada
+
+select power(2, 4)
+select round(24.882, 2)
+select sign(-234)
+select sqrt(9)
+
+
+## mod(x, y) | pi() | random() | trunc(a, d)
+## mod() : devuelve el resto de la division
+## pi() : para trabajar con el numero pi
+## random() : para generar un valor aleatorio entre 0 y 1
+## trunc() : devuleve la parte entera de a, con el d decimales
+
+select mod(31, 15)
+select pi()
+select random()
+select trunc(-57.35)
+
+# ---------------------------------------funciones para manejar cadenas de caracteres-------------------------------
+## char_lenght(string) : cuenta la cantidad de caracteres (ojo que los spacios tambien cuentan)
+## upper(string) : vuelve todos los caracteres a mayuscula
+## lower(string) : devuelve todo en minuscula
+## position(string in string) : devuelve la posicion donde comienza la primera palabra (ojo las mayusculas)
+
+
+select char_lenght('hola mundo')
+select upper()
+select lower('hola mundo')
+select position ('mundo' in 'hola mundo')
+
+
+# ------------------------------------------------funciones para cadenas de caracteres----------------------
+## substring(string [from int] [from int]) : toma una seccion del texto, desde el 2 al 6 para el caso
+## trim(string) : para eliminar caracteres desde el principio o desde el final (por defecto elimina los espacios)
+## trim([leading][string] from string) : que elimine el guion al principio
+## trim([trailing][string] from string) : elimina al final
+## trim([both][string] from string) : ellimina al inicio y al final
+
+select substring('hello world' from 2 for 6)
+select trim(' hello world ')
+select trim(leading '-' from ' hello world ')
+select trim(trailing '-' from ' hello world ')
+select trim(both '-' from ' hello world ')
+
+
+# ---------------------------------funciones para manejar cadenas de caracteres-----------------------------------
+## ltrim(string, string) : elimina todos los escpacios a la izquierda(por defecto)
+## rtrim(string, string) : elimina todos los escpacios a la derecha(por defecto)
+## substr(text, int[, int]) : me extrae los primeros 5 caracteres, luego se puede colocar el limite
+## lpad(text, int, text) : para agregar caracteres a la izquierda (para el ejemplo, 15 es la medida de todos los caracteres)
+## rpad(text, int, text) : para agregar caracteres a la derecha (para el ejemplo, 15 es la medida de todos los caracteres)
+
+select ltrim('___hola mundo', '_')
+select substr('hola mundo____', 5, 8) 
+select lpad('hola mundo', 15, '-')
+
+# ------------------------------funciones para fecha y tiempo----------------------------------------------------
+## para saber que fecha es hoy
+select current_date
+
+## para obtener el tiempo actual y zona horaria
+select current_time
+
+## toma una foto al tiempo actual (fecha, hora y zona horaria)
+select current_timestamp
+
+## para obtener cosas especificas de los timpos y fechas
+select extract(year from current_timestamp)
+select extract(month from current_timestamp)
+select extract(day from current_timestamp)
+select extract(hour from current_timestamp)
+select extract(century from current_timestamp)
+select extract(quarter from current_timestamp)
+...
+
+
+# ------------------------------------operadores para controlar los valores nulos----------------------------------------
+
+## muestra los registros de la columan pais que tiene valores nulos
+select * from persona
+where pais is null
+
+##  mostrar los registros que NO son nulos
+select * from persona
+where pais is not null
+
+
+# ----------------------------------------------para crear secuencias-----------------------------------------------------
+
+## primero hay que crear la secuencia
+create sequence sec_indice
+start with 1
+increment by 20
+minvalue 1 
+maxvalue 100
+cycle;
+
+select * from 'sec_indice'
+
+## para ir mostrando los valores de la secuencia
+select nextval('sec_indice')
+
+## tambien podemos modificar la secuencia
+alter sequence sec_indice
+start with 10
+increment by 30
+minvalue 10 
+maxvalue 200
+restart 10;
+cycle  -- para que no supere el ultimo valor
+
+## para eliminar la sequencia
+drop sequence sec_indice
+
+# ----------------------------------------------subconsultas---------------------------------------
+## una consulta dentro de otra
+
+select * from persona
+select * from precios
+
+## subconsulta en el select
+select nombre, apellido, pais,
+(select max(precio) as precio maximo from precios where pais = Pais)
+from persona
+
+## subconsulta en el where
+select nombre, apellido, pais, from persona
+where Pais = (select pais from precios order by precio limit 1 offset 14)
+
+## subconsulta en el where in
+select nombre, apellido, Pais from persona 
+where Pais in (select pais from precios where pais like '%C%')
+
+## para hacer un update con subconsultas
+update persona set 
+Pais = (select pais from precios order by precio limit 1 offset 50)
+where Pais is null
+
+update persona set visa = 'si'
+where Pais in (select pais from precios where pais like '%Esp%')
+
+## para borrar un registro en subconsultas
+delete from persona
+where Pais in (select pais from precios where pais like ''%gol%)
+
+## subconsultas con un insert
+insert into preciosmaximos
+select pais, max(precio) from precios
+where pais = pais
+group by pais
+
+# -------------------------------------para crear variables---------------------------------------------
+
+do $$
+declare x int := 50;
+        y int := 500;
+        z int;
+begin
+
+z := x * y;
+
+raise notice 'el resultado de la operacion es: %', z;
+
+end $$;
+
+
+# ----------------------------------------condicional if----------------------------------------------
+select * from precios
+
+do $$
+begin
+
+if exist(select pais from precios where pais = 'iraq') then
+delete from precios where pais = 'iraq';
+raise notice 'el pais ha sido encontrado';
+else
+raise notice 'el pais no se ha encontrado';
+end if;
+
+end $$
+
+# ---------------------------------------ciclo while-----------------------------------------------------
+
+select * from precios
+
+do $$
+declare x int := (select count('id') from precios);
+        y int := 0;
+begin
+while (y < x)
+loop
+raise notice 'tecnobinaria, vuelta %', y;
+y := y + 1;
+end loop;
+end $$
+
+# ---------------------------------------------------case------------------------------------------------
+select * from precios
+
+select pais, precio,
+    case when pais = 'turkey' then 'vuelo con escalas'
+         when pais = 'españa' then 'vuelo retrasado'
+         else 'vuelo normal'
+    end as tipo_de_viaje
+from precios 
+
+# -----------------------------------------------------cursores-----------------------------------------------
+## guarda registros de forma temporal
+## el fetch va avanzando de uno en uno
+
+do $$
+declare
+        registro record;
+        cur_precios cursor for select * from precios order by pais;
+begin 
+open cur_precios;
+fetch cur_precios into registro;
+raise notice 'pais: %, precios: %', registro.pais, registro.precio;
+
+fetch cur_precios into registro;
+raise notice 'pais: %, precios: %', registro.pais, registro.precio;
+
+end $$
+language 'plpgsql';
+
+## para recorrer los registros con un ciclo while
+do $$
+declare
+        registro record;
+        cur_precios cursor for select * from precios order by pais;
+begin 
+open cur_precios;
+fetch cur_precios into registro;
+while (found) loop
+raise notice 'pais: %, precios: %', registro.pais, registro.precio;
+fetch cur_precios into registro;
+end loop;
+raise notice 'pais: %, precios: %', registro.pais, registro.precio;
+
+end $$
+language 'plpgsql';
+
+## para recorrer con un ciclo for
+do $$
+declare
+        registro record;
+        cur_precios cursor for select * from precios order by pais;
+begin 
+for registro in cur_precios loop
+raise notice 'pais: %, precios: %', registro.pais, registro.precio;
+end loop;
+end $$
+language 'plpgsql';
