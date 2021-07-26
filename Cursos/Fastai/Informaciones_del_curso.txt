@@ -1,0 +1,9 @@
+Mi intencion con este curso es profundizar en modelos de redes neuronales y asi, luego poder 
+aplicar estos nuevos conocimientos en futuros proyectos personales.
+
+En consecuencia, en esta carpeta, compartiré algunos de los notebook que estoy utilizando para
+tomar apuntes del curso. Ademas, estos los estoy haciendo a traves de la plataforma de Google Collab,
+para asi tener acceso a una unidad de procesamientos grafica. 
+
+Por ultimo, este curso se encuentra disponible en la siguiente pagina: https://course.fast.ai/
+Donde se podra ver las lecciones y descargar los documentos del curso.
