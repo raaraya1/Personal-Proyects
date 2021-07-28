@@ -1,0 +1,20 @@
+Para entrar en contexto, hace un tiempo asistí a un seminario de Gurobi con fines academicos. 
+En este dieron a conocer diferentes caracteristicas presentes en su producto como tiempos de 
+procesamiento, problemas que soporta la herramienta, plataformas de trabajo, licencias, entre otros.
+
+Asimismo, lo que mas rescaté del seminario es que este software se puede ejecutar tanto desde
+Jupyter Notebook como desde Google Collab (cosa que nunca logre hacer con SCIP). Y si bien, existen 
+algunas condicionantes en cuanto al numero de variables (max 2000), restricciones (max 2000) y tipos
+de problemas que se pueden trabajar sin contar con la licencia, aun con estas, es posible de abordar
+una gran cantidad de problemas de programacion lineal.
+
+Adicionalmente, en la charla, nos mostraron algunos ejemplos de programacion matematica y su equivalente
+en lenguaje de programación. Para mi sorpresa, resultó ser que la escritura de codigo tanto de SCIP 
+como de Gurobi son practicamente identicas, con la excepcion de algunas pocas reglas. Es por esta
+razon que, para hacer notar estas sutilezas, dejaré en esta carpeta algunos codigos publicados
+como material complementario en la pagina web de Gurobi y los redactaré en una escritura de codigo lo
+mas similar a como acustrumbraba trabajar en SCIP.
+
+Fuentes:
+Pagina principal: https://www.gurobi.com/
+Pagina complementaria (donde extraje los ejemplos): https://www.gurobi.com/resource/modeling-examples-using-the-gurobi-python-api-in-jupyter-notebook/
