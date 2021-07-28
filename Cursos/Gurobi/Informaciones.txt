@@ -1,3 +1,5 @@
+--------------Informaciones sobre el contenido de esta carpeta-------------------------------------
+
 Para entrar en contexto, hace un tiempo asistí a un seminario de Gurobi con fines academicos. 
 En este dieron a conocer diferentes caracteristicas presentes en su producto como tiempos de 
 procesamiento, problemas que soporta la herramienta, plataformas de trabajo, licencias, entre otros.
